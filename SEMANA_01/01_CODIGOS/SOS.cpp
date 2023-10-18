@@ -1,4 +1,4 @@
-#include <Arduino.h>
+// #include <Arduino.h> // Library do arduino, nao necessaria quando usa-se o IDE do arduino mas necessaria quando usa-se o VSCode/PlatformIO
 #include <unordered_map>
 
 // Define que o pino 27 será usado para o LED
@@ -69,13 +69,6 @@ void flash_led_string(String input) {
 	}
 }
 
-// Essa função é executada em uma tarefa separada para piscar o LED com SOS
-void flash_led_loop(void *parameter) {
-	while (true) {
-		flash_led_string("SOS");
-		delay(1000);
-	}
-}
 
 void setup() {
 	Serial.begin(115200);
@@ -96,20 +89,10 @@ void setup() {
 
 	// Inicializa o pino do LED
 	pinMode(ledPin, OUTPUT);
-
-	// Cria uma tarefa para piscar o LED com SOS sem travar o loop principal
-	xTaskCreatePinnedToCore(
-		flash_led_loop,
-		"flash_led_loop",
-		10000,
-		NULL,
-		0,
-		NULL,
-		0
-	);
 }
 
 void loop() {
 	// Nada aqui, pois a tarefa flash_led_loop já está piscando o LED
-	delay(10);
+	flash_led_string("SOS");
+	delay(1000);
 }
